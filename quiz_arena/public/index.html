@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#101326">
+  <title>Quiz Arena — Conhecimento em jogo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="ambient ambient-a"></div><div class="ambient ambient-b"></div>
+  <main class="shell">
+    <header class="topbar">
+      <a class="brand" href="#"><span class="brand-mark">Q</span><span>QUIZ<span class="brand-accent">ARENA</span></span></a>
+      <div class="online"><span class="pulse"></span> MULTIPLAYER ONLINE</div>
+    </header>
+
+    <section id="home" class="screen active">
+      <div class="hero">
+        <div class="eyebrow"><span>✦</span> DESAFIE SEUS CONHECIMENTOS</div>
+        <h1>Conhecimento<br>é <span class="gradient-text">poder.</span></h1>
+        <p class="hero-copy">Reúna seus amigos, responda rápido e conquiste o topo do ranking.</p>
+        <div class="feature-row"><span>⚡ 20 segundos por pergunta</span><span>👥 2 a 8 jogadores</span><span>🏆 De 10 a 50 perguntas</span></div>
+      </div>
+      <div class="home-grid">
+        <article class="panel create-panel">
+          <div class="panel-icon purple">✚</div><h2>Criar uma sala</h2>
+          <p>Seja o anfitrião e convide seus amigos.</p>
+          <label for="createName">SEU NOME</label><input id="createName" maxlength="18" placeholder="Como devemos te chamar?">
+          <button id="createBtn" class="btn btn-primary">Criar sala <span>→</span></button>
+        </article>
+        <article class="panel join-panel">
+          <div class="panel-icon cyan">⇥</div><h2>Entrar em uma sala</h2>
+          <p>Já tem um código? Entre na disputa.</p>
+          <label for="joinName">SEU NOME</label><input id="joinName" maxlength="18" placeholder="Digite seu nome">
+          <label for="roomCode">CÓDIGO DA SALA</label><input id="roomCode" class="code-input" maxlength="6" placeholder="EX: A4B92C">
+          <button id="joinBtn" class="btn btn-secondary">Entrar na sala <span>→</span></button>
+        </article>
+      </div>
+      <div class="categories"><span>7 CATEGORIAS</span><div>História</div><div>Geografia</div><div>Ciências</div><div>Matemática</div><div>Português</div><div>Cultura geral</div><div>Tecnologia</div></div>
+    </section>
+
+    <section id="lobby" class="screen">
+      <button class="back-btn" id="leaveLobby">← Voltar ao início</button>
+      <div class="section-heading"><div class="eyebrow">SALA DE ESPERA</div><h1>Prepare-se para a <span class="gradient-text">batalha.</span></h1><p>Compartilhe o código e espere seus amigos entrarem.</p></div>
+      <div class="lobby-layout">
+        <article class="panel room-panel">
+          <div class="room-code-label">CÓDIGO DA SALA</div>
+          <div class="room-code-line"><strong id="displayCode">------</strong><button id="copyCode" class="copy-btn" title="Copiar código">▣</button></div>
+          <div class="room-hint">Seus amigos podem usar esse código para entrar.</div>
+          <div class="divider"></div>
+          <div class="settings-box" id="hostSettings">
+            <h3>Configurações da partida</h3>
+            <label for="questionCount">QUANTIDADE DE PERGUNTAS</label>
+            <select id="questionCount"></select>
+            <label for="durationSeconds">TEMPO POR PERGUNTA</label>
+            <select id="durationSeconds"><option value="15">15 segundos</option><option value="20" selected>20 segundos</option><option value="25">25 segundos</option></select>
+            <p class="settings-note">Todas as categorias ficam misturadas e podem aparecer em qualquer ordem.</p>
+            <button id="saveSettings" class="btn btn-secondary full">Salvar configurações</button>
+          </div>
+          <div id="guestSettings" class="settings-note hidden">O anfitrião escolhe as configurações da partida.</div>
+          <div class="divider"></div>
+          <div class="player-header"><h3>Jogadores</h3><span id="playerCount">1/8</span></div>
+          <div id="lobbyPlayers" class="player-list"></div>
+          <button id="startBtn" class="btn btn-primary full">Iniciar partida <span>→</span></button>
+          <div id="startHint" class="hint">São necessários pelo menos 2 jogadores.</div>
+        </article>
+        <aside class="panel rules-panel"><div class="panel-icon gold">🏆</div><h3>Regras da arena</h3><ul><li><b>10 a 50 perguntas</b><span>Escolha qualquer quantidade, de uma em uma.</span></li><li><b>20 segundos</b><span>O anfitrião pode escolher 15, 20 ou 25 segundos.</span></li><li><b>Até 150 pontos</b><span>100 pelo acerto + bônus de velocidade.</span></li><li><b>Seja rápido!</b><span>O ranking é atualizado a cada resposta.</span></li></ul></aside>
+      </div>
+    </section>
+
+    <section id="game" class="screen">
+      <div class="game-top"><div><div class="eyebrow" id="roundLabel">RODADA 1 DE 20</div><div class="progress-track"><div id="progressBar"></div></div></div><div class="timer-box"><span>⏱</span><strong id="timer">20</strong><small>SEG</small></div></div>
+      <div class="game-layout">
+        <div class="question-area">
+          <div class="question-meta"><span id="categoryTag" class="category-tag">HISTÓRIA</span><span id="answeredCount">0/2 responderam</span></div>
+          <h2 id="questionText">A pergunta aparecerá aqui.</h2>
+          <div id="answers" class="answers"></div>
+          <div id="feedback" class="feedback" aria-live="polite">Escolha uma alternativa para marcar seus pontos.</div>
+          <div id="revealBox" class="reveal-box hidden"></div>
+        </div>
+        <aside class="panel scoreboard"><div class="score-title"><h3>Placar ao vivo</h3><span>🏆</span></div><div id="scorePlayers"></div></aside>
+      </div>
+    </section>
+
+    <section id="results" class="screen">
+      <div class="results-hero"><div class="eyebrow">FIM DE JOGO</div><div class="trophy">🏆</div><h1 id="winnerTitle">Temos um campeão!</h1><p id="winnerSubtitle">A disputa foi incrível.</p></div>
+      <article class="panel results-panel"><h2>Classificação final</h2><div id="finalRanking"></div><button id="playAgain" class="btn btn-primary full">Voltar ao início <span>→</span></button></article>
+    </section>
+    <div id="toast" class="toast"></div>
+    <footer>QUIZ ARENA <span>•</span> APRENDA. COMPITA. VENÇA.</footer>
+  </main>
+  <script src="/socket.io/socket.io.js"></script><script src="/client.js"></script>
+</body></html>

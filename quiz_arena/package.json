@@ -1,0 +1,15 @@
+{
+  "name": "quiz-arena-multiplayer",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Jogo multiplayer de conhecimentos gerais para 2 a 8 jogadores",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "socket.io": "^4.8.1"
+  }
+}
