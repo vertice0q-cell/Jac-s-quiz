@@ -1,0 +1,22 @@
+{
+  "id": "/",
+  "name": "Quiz Arena",
+  "short_name": "Quiz Arena",
+  "description": "Jogue partidas multiplayer de conhecimentos gerais com seus amigos.",
+  "lang": "pt-BR",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["standalone"],
+  "orientation": "portrait",
+  "background_color": "#101326",
+  "theme_color": "#101326",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
