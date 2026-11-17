@@ -3,6 +3,10 @@
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#101326">
+  <meta name="description" content="Jogue partidas multiplayer de conhecimentos gerais com seus amigos.">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/icon.svg">
   <title>Quiz Arena — Conhecimento em jogo</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
@@ -92,4 +96,13 @@
     <footer>QUIZ ARENA <span>•</span> APRENDA. COMPITA. VENÇA.</footer>
   </main>
   <script src="/socket.io/socket.io.js"></script><script src="/client.js"></script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("/sw.js").catch((error) => {
+          console.error("Falha ao registrar o modo de aplicativo:", error);
+        });
+      });
+    }
+  </script>
 </body></html>
