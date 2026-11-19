@@ -48,3 +48,46 @@ input:focus{border-color:#8f7cff;box-shadow:0 0 0 3px #8f7cff24}
 footer{color:#8495ae}
 @media(max-width:720px){.knowledge-orbit{margin-top:10px}.hero{padding-top:27px}.hero h1{font-size:51px}.categories{gap:7px}.categories div{padding:7px 9px}.feature-row span{font-size:10px}}
 @media(prefers-reduced-motion:no-preference){.orbit-symbol{animation:orbitFloat 5s ease-in-out infinite}.symbol-geo{animation-delay:-1s}.symbol-science{animation-delay:-2s}.symbol-tech{animation-delay:-3s}.symbol-history{animation-delay:-4s}@keyframes orbitFloat{0%,100%{translate:0 0}50%{translate:0 -5px}}}
+
+/* Modo Arena ao vivo: respostas vibrantes e ritmo de jogo */
+.timer-box{position:relative;min-width:112px;justify-content:center;transition:background .2s,border-color .2s}
+.timer-track{position:absolute;left:8px;right:8px;bottom:-5px;height:4px;border-radius:8px;background:#ffffff20;overflow:hidden}
+.timer-track div{height:100%;width:100%;border-radius:8px;background:linear-gradient(90deg,#b8ed69,#ffd166);transition:width .1s linear}
+.timer-box.urgent{background:#562b3e;border-color:#ff7185;animation:timerPulse .55s ease-in-out infinite alternate}
+.timer-box.urgent #timer{color:#ff9aaa!important}
+.timer-box.urgent .timer-track div{background:#ff7185}
+@keyframes timerPulse{to{box-shadow:0 0 0 5px #ff71851c,0 0 24px #ff718555}}
+.answer-progress{height:5px;background:#ffffff12;border-radius:9px;overflow:hidden;margin:14px 0 0}
+.answer-progress div{height:100%;width:0;background:linear-gradient(90deg,#b8ed69,#42d9d0);border-radius:9px;transition:width .35s ease}
+.question-area h2{background:linear-gradient(145deg,#202e4a,#19253d);border:1px solid #ffffff16;border-radius:18px;padding:25px 28px;max-width:none;box-shadow:0 14px 38px #050b1a45;animation:questionPop .35s cubic-bezier(.2,.8,.2,1)}
+@keyframes questionPop{from{opacity:0;transform:translateY(12px) scale(.985)}to{opacity:1;transform:none}}
+.answers{gap:13px}
+.answer{position:relative;min-height:86px;border:0;border-radius:14px;padding:15px 18px;color:#fff;font-size:clamp(13px,1.5vw,16px);font-weight:800;box-shadow:0 6px 0 #0003,0 12px 24px #050b1a30;overflow:hidden}
+.answer:before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,#ffffff22,transparent 58%);pointer-events:none}
+.answer .letter{width:38px;height:38px;border-radius:10px;background:#ffffff25;color:#fff;font-size:20px;z-index:1}
+.answer-copy{z-index:1;line-height:1.35}
+.answer-1{background:linear-gradient(135deg,#ed5d68,#c93d59)}
+.answer-2{background:linear-gradient(135deg,#398ee8,#2863c6)}
+.answer-3{background:linear-gradient(135deg,#e7b83e,#c88b22);color:#20243a}
+.answer-4{background:linear-gradient(135deg,#32b98c,#168566)}
+.answer-3 .letter{color:#20243a;background:#ffffff45}
+.answer:hover:not(:disabled){transform:translateY(-3px);filter:brightness(1.1);box-shadow:0 9px 0 #0003,0 18px 30px #050b1a45}
+.answer:active:not(:disabled){transform:translateY(2px);box-shadow:0 3px 0 #0003}
+.answer:disabled{opacity:.78}
+.answer.selected{outline:3px solid #fff;outline-offset:2px;opacity:1}
+.answer.correct{background:linear-gradient(135deg,#a7e85d,#4ea83f);color:#162b22;outline:3px solid #d9ff9c;opacity:1;animation:correctBounce .5s ease}
+.answer.correct .letter{background:#ffffff55;color:#18331e}
+.answer.wrong{background:linear-gradient(135deg,#69758c,#424e68);opacity:.65}
+@keyframes correctBounce{0%{transform:scale(.98)}55%{transform:scale(1.025)}100%{transform:scale(1)}}
+.feedback{font-size:13px;font-weight:700;min-height:24px;margin:20px 0 12px}
+.feedback-correct{color:#c5f58c;text-shadow:0 0 18px #b8ed6944;animation:feedbackIn .25s ease}
+.feedback-wait{color:#d6def0}
+@keyframes feedbackIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.reveal-box{font-size:14px;padding:17px 19px;border-radius:14px;animation:feedbackIn .35s ease}
+.score-player{transition:background .2s,transform .2s;border-radius:9px;padding-left:8px;padding-right:8px}
+.score-player:hover{background:#ffffff0b;transform:translateX(3px)}
+.score{font-size:14px}
+.game-top .eyebrow{font-size:11px}
+@media(max-width:720px){.question-area h2{padding:20px;font-size:23px}.answer{min-height:74px;padding:12px}.answer .letter{width:32px;height:32px}.timer-box{min-width:100px}.answers{gap:10px}}
+@media(max-width:390px){.answers{grid-template-columns:1fr}.answer{min-height:64px}}
+@media(prefers-reduced-motion:reduce){.timer-box.urgent,.answer.correct,.question-area h2,.feedback-correct{animation:none}}
