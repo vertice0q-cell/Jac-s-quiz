@@ -8,7 +8,7 @@ const questions = require('./easy-questions').map((q, i) => ({ ...q, id: q.id ||
 const app = express(); const server = http.createServer(app); const io = new Server(server);
 const PORT = process.env.PORT || 3000;
 app.use(express.static(path.join(__dirname, 'public')));
-const rooms = new Map(); const MAX_PLAYERS = 8; const MIN_PLAYERS = 2;
+const rooms = new Map(); const MAX_PLAYERS = 8; const MIN_PLAYERS = 2; const quickQueue = [];
 const HISTORY_FILE = path.join(__dirname, 'question-history.json');
 const HISTORY_LIMIT = 350;
 let history = [];
@@ -57,6 +57,30 @@ function finishGame(room) {
 }
 function validSettings(data) { const n=Number(data?.questionCount); const t=Number(data?.durationSeconds); return { questionCount:Number.isInteger(n)?Math.max(10,Math.min(50,n)):20, durationSeconds:[15,20,25].includes(t)?t:20 }; }
 io.on('connection',socket=>{
+  socket.on('match:find',({name,avatar},cb)=>{
+    name=String(name||'').trim().slice(0,18); avatar=validAvatar(avatar);
+    if(!name)return cb?.({error:'Escolha um apelido antes de continuar.'});
+    if(socket.data.roomCode)return cb?.({error:'Você já está em uma sala.'});
+    const existing=quickQueue.findIndex(item=>item.socketId===socket.id);
+    if(existing>=0)quickQueue.splice(existing,1);
+    let opponent=null;
+    while(quickQueue.length&&!opponent){const candidate=quickQueue.shift();const peer=io.sockets.sockets.get(candidate.socketId);if(peer&&peer.connected&&!peer.data.roomCode)opponent={socket:peer,profile:candidate};}
+    if(!opponent){quickQueue.push({socketId:socket.id,name,avatar});socket.data.quickQueued=true;socket.emit('match:waiting');return cb?.({waiting:true});}
+    const peer=opponent.socket;
+    const roomCode=code();
+    const room={code:roomCode,hostId:peer.id,players:new Map(),status:'lobby',questionIndex:0,questionCount:10,durationSeconds:20,questions:[],timer:null,questionStartedAt:null,quickMatch:true};
+    room.players.set(peer.id,{id:peer.id,name:opponent.profile.name,avatar:opponent.profile.avatar,score:0,answered:false,lastAnswer:null,correct:0,wrong:0,unanswered:0});
+    room.players.set(socket.id,{id:socket.id,name,avatar,score:0,answered:false,lastAnswer:null,correct:0,wrong:0,unanswered:0});
+    rooms.set(roomCode,room);
+    [peer,socket].forEach(player=>{player.join(roomCode);player.data.roomCode=roomCode;player.data.quickQueued=false;player.emit('match:found',publicRoom(room));});
+    room.questions=selectQuestions(room.questionCount);room.questionIndex=0;sendQuestion(room);
+    cb?.({matched:true,room:publicRoom(room)});
+  });
+  socket.on('match:cancel',()=>{
+    const index=quickQueue.findIndex(item=>item.socketId===socket.id);
+    if(index>=0)quickQueue.splice(index,1);
+    socket.data.quickQueued=false;socket.emit('match:cancelled');
+  });
   socket.on('room:create',({name,avatar},cb)=>{
     name=String(name||'').trim().slice(0,18); avatar=validAvatar(avatar); if(!name)return cb?.({error:'Escolha um apelido.'});
     let roomCode; do{roomCode=code();}while(rooms.has(roomCode));
@@ -84,6 +108,6 @@ io.on('connection',socket=>{
     player.answered=true; player.lastAnswer=index; const correct=index===q.answer; let points=0; if(correct){const elapsed=Date.now()-room.questionStartedAt;const remaining=Math.max(0,room.durationSeconds*1000-elapsed);points=100+Math.round(50*remaining/(room.durationSeconds*1000));player.score+=points;player.correct++;}else player.wrong++;
     cb?.({ok:true,correct,points}); io.to(room.code).emit('player:answered',{playerId:player.id,playerName:player.name,correct,points}); emitRoom(room); if([...room.players.values()].every(p=>p.answered))revealAnswer(room,false);
   });
-  socket.on('disconnect',()=>{const room=rooms.get(socket.data.roomCode);if(!room)return;room.players.delete(socket.id);if(!room.players.size){stopTimer(room);rooms.delete(room.code);return;}if(room.hostId===socket.id)room.hostId=room.players.keys().next().value;if(room.status==='playing'&&[...room.players.values()].every(p=>p.answered))revealAnswer(room,false);emitRoom(room);});
+  socket.on('disconnect',()=>{const queuedIndex=quickQueue.findIndex(item=>item.socketId===socket.id);if(queuedIndex>=0)quickQueue.splice(queuedIndex,1);const room=rooms.get(socket.data.roomCode);if(!room)return;room.players.delete(socket.id);if(!room.players.size){stopTimer(room);rooms.delete(room.code);return;}if(room.hostId===socket.id)room.hostId=room.players.keys().next().value;if(room.status==='playing'&&[...room.players.values()].every(p=>p.answered))revealAnswer(room,false);emitRoom(room);});
 });
 server.listen(PORT,()=>console.log(`Quiz Arena rodando em http://localhost:${PORT}`));
