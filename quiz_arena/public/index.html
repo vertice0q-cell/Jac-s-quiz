@@ -27,17 +27,24 @@
         <p class="hero-copy">Cada pergunta abre uma nova descoberta. Reúna a equipe e coloque suas ideias em jogo.</p>
         <div class="feature-row"><span>◷ 20 segundos por pergunta</span><span>♧ 2 a 8 jogadores</span><span>✧ De 10 a 50 perguntas</span></div><div class="knowledge-orbit" aria-hidden="true"><span class="orbit orbit-one"></span><span class="orbit orbit-two"></span><span class="orbit-symbol symbol-math">∑</span><span class="orbit-symbol symbol-geo">⌖</span><span class="orbit-symbol symbol-science">⚛</span><span class="orbit-symbol symbol-history">⌛</span><span class="orbit-symbol symbol-tech">⌘</span><span class="orbit-core">IDEIAS<br>EM ÓRBITA</span></div>
       </div>
-      <div class="home-grid">
+      <section class="profile-panel" aria-label="Personalize seu jogador">
+          <div class="profile-heading"><div><div class="eyebrow">SUA IDENTIDADE NA ARENA</div><h2>Monte seu personagem</h2><p>Escolha um apelido e um avatar para entrar na disputa.</p></div><div class="profile-preview" id="profilePreview" aria-hidden="true">🦊</div></div>
+          <label for="playerName">SEU APELIDO</label><input id="playerName" maxlength="18" autocomplete="nickname" placeholder="Como devemos te chamar?">
+          <div class="avatar-label">ESCOLHA SEU AVATAR</div><div class="avatar-picker" id="avatarPicker" role="group" aria-label="Escolha seu avatar">
+            <button type="button" class="avatar-choice selected" data-avatar="🦊" aria-label="Raposa" aria-pressed="true">🦊</button><button type="button" class="avatar-choice" data-avatar="🐼" aria-label="Panda" aria-pressed="false">🐼</button><button type="button" class="avatar-choice" data-avatar="🐸" aria-label="Sapo" aria-pressed="false">🐸</button><button type="button" class="avatar-choice" data-avatar="🦁" aria-label="Leão" aria-pressed="false">🦁</button><button type="button" class="avatar-choice" data-avatar="🐙" aria-label="Polvo" aria-pressed="false">🐙</button><button type="button" class="avatar-choice" data-avatar="🐯" aria-label="Tigre" aria-pressed="false">🐯</button><button type="button" class="avatar-choice" data-avatar="🐨" aria-label="Coala" aria-pressed="false">🐨</button><button type="button" class="avatar-choice" data-avatar="🐲" aria-label="Dragão" aria-pressed="false">🐲</button><button type="button" class="avatar-choice" data-avatar="🦉" aria-label="Coruja" aria-pressed="false">🦉</button><button type="button" class="avatar-choice" data-avatar="🐵" aria-label="Macaco" aria-pressed="false">🐵</button><button type="button" class="avatar-choice" data-avatar="🦄" aria-label="Unicórnio" aria-pressed="false">🦄</button><button type="button" class="avatar-choice" data-avatar="🐧" aria-label="Pinguim" aria-pressed="false">🐧</button>
+          </div><div class="profile-footnote">Seu personagem fica salvo neste dispositivo. Você pode trocar quando quiser.</div>
+        </section>
+        <div class="home-grid">
         <article class="panel create-panel">
           <div class="panel-icon purple">✚</div><h2>Criar uma sala</h2>
           <p>Seja o anfitrião e convide seus amigos.</p>
-          <label for="createName">SEU NOME</label><input id="createName" maxlength="18" placeholder="Como devemos te chamar?">
+          
           <button id="createBtn" class="btn btn-primary">Criar sala <span>→</span></button>
         </article>
         <article class="panel join-panel">
           <div class="panel-icon cyan">⇥</div><h2>Entrar em uma sala</h2>
           <p>Já tem um código? Entre na disputa.</p>
-          <label for="joinName">SEU NOME</label><input id="joinName" maxlength="18" placeholder="Digite seu nome">
+          
           <label for="roomCode">CÓDIGO DA SALA</label><input id="roomCode" class="code-input" maxlength="6" placeholder="EX: A4B92C">
           <button id="joinBtn" class="btn btn-secondary">Entrar na sala <span>→</span></button>
         </article>
