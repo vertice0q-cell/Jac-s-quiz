@@ -24,30 +24,19 @@
       <div class="hero hero-compact">
         <div class="eyebrow"><span>✦</span> UM UNIVERSO DE IDEIAS</div>
         <h1>Explore. Pense. <span class="gradient-text">Conquiste.</span></h1>
-        <p class="hero-copy">Conhecimento, diversão e competição com seus amigos. Prepare seu personagem e entre na Arena!</p>
+        <p class="hero-copy">Conhecimento, diversão e competição com seus amigos. Escolha seu nome e entre na Arena!</p>
       </div>
-      <section class="profile-stage" aria-label="Personalização do jogador">
-        <div class="profile-editor">
-          <div class="profile-topline"><span class="step-number">01</span><span>SEU PERSONAGEM</span><span class="profile-status"><i></i> PRONTO PARA JOGAR</span></div>
-          <div class="profile-main">
-            <div class="avatar-showcase"><div class="avatar-halo"></div><div class="profile-preview" id="profilePreview" aria-hidden="true">🦊</div><div class="avatar-caption">ESSE É VOCÊ!</div></div>
-            <div class="profile-fields"><div class="eyebrow">IDENTIDADE DO JOGADOR</div><h2>Como vamos te chamar?</h2><p>Escolha um apelido que seus amigos vão reconhecer.</p>
-              <label for="playerName">SEU APELIDO</label><input id="playerName" maxlength="18" autocomplete="nickname" placeholder="Digite seu nome de jogador...">
-              <div class="profile-tip">✦ Seu nome e personagem ficam salvos neste dispositivo.</div>
-            </div>
-          </div>
-          <div class="avatar-section-head"><div><span class="eyebrow">02 — PERSONALIZE</span><h3>Escolha seu avatar</h3><p>Qual personagem combina com você?</p></div><span class="avatar-count">12 PERSONAGENS</span></div>
-          <div class="avatar-picker" id="avatarPicker" role="group" aria-label="Escolha seu avatar">
-            <button type="button" class="avatar-choice selected" data-avatar="🦊" aria-label="Raposa" aria-pressed="true"><span>🦊</span><small>Raposa</small></button><button type="button" class="avatar-choice" data-avatar="🐼" aria-label="Panda" aria-pressed="false"><span>🐼</span><small>Panda</small></button><button type="button" class="avatar-choice" data-avatar="🐸" aria-label="Sapo" aria-pressed="false"><span>🐸</span><small>Sapo</small></button><button type="button" class="avatar-choice" data-avatar="🦁" aria-label="Leão" aria-pressed="false"><span>🦁</span><small>Leão</small></button><button type="button" class="avatar-choice" data-avatar="🐙" aria-label="Polvo" aria-pressed="false"><span>🐙</span><small>Polvo</small></button><button type="button" class="avatar-choice" data-avatar="🐯" aria-label="Tigre" aria-pressed="false"><span>🐯</span><small>Tigre</small></button><button type="button" class="avatar-choice" data-avatar="🐨" aria-label="Coala" aria-pressed="false"><span>🐨</span><small>Coala</small></button><button type="button" class="avatar-choice" data-avatar="🐲" aria-label="Dragão" aria-pressed="false"><span>🐲</span><small>Dragão</small></button><button type="button" class="avatar-choice" data-avatar="🦉" aria-label="Coruja" aria-pressed="false"><span>🦉</span><small>Coruja</small></button><button type="button" class="avatar-choice" data-avatar="🐵" aria-label="Macaco" aria-pressed="false"><span>🐵</span><small>Macaco</small></button><button type="button" class="avatar-choice" data-avatar="🦄" aria-label="Unicórnio" aria-pressed="false"><span>🦄</span><small>Unicórnio</small></button><button type="button" class="avatar-choice" data-avatar="🐧" aria-label="Pinguim" aria-pressed="false"><span>🐧</span><small>Pinguim</small></button>
-          </div>
+      <section class="home-entry" aria-label="Entrar no jogo">
+        <div class="home-name">
+          <div class="eyebrow">SEU NOME</div>
+          <label for="playerName">COMO QUER SER CHAMADO?</label>
+          <input id="playerName" maxlength="18" autocomplete="nickname" placeholder="Digite seu nome...">
         </div>
-      </section>
-      <section class="home-actions">
-        <div class="actions-heading"><div><div class="eyebrow">03 — ESCOLHA COMO JOGAR</div><h2>Sua próxima partida começa aqui.</h2></div><span>2 A 8 JOGADORES</span></div>
-        <div class="action-grid">
-          <article class="action-card quick-card"><div class="action-icon">⚡</div><div class="action-kicker">SEM COMPLICAÇÃO</div><h3>Jogo aleatório</h3><p>Encontre outro jogador online e comece uma partida rápida.</p><button id="quickBtn" class="btn btn-primary">Jogar agora <span>→</span></button><div id="quickStatus" class="quick-status hidden">Procurando alguém para jogar...</div><button id="cancelQuickBtn" class="cancel-quick hidden">Cancelar busca</button></article>
-          <article class="action-card create-card"><div class="action-icon">✚</div><div class="action-kicker">CHAME A SUA TURMA</div><h3>Criar sala</h3><p>Crie uma sala privada e compartilhe o código com seus amigos.</p><button id="createBtn" class="btn btn-secondary">Criar uma sala <span>→</span></button></article>
-          <article class="action-card join-card"><div class="action-icon">⇥</div><div class="action-kicker">JÁ TEM UM CONVITE?</div><h3>Entrar em sala</h3><p>Digite o código que seu amigo compartilhou com você.</p><label for="roomCode">CÓDIGO DA SALA</label><input id="roomCode" class="code-input" maxlength="6" placeholder="EX: A4B92C"><button id="joinBtn" class="btn btn-secondary">Entrar na sala <span>→</span></button></article>
+        <div class="home-actions">
+          <div class="action-grid">
+            <article class="action-card create-card"><div class="action-icon">✚</div><div class="action-kicker">JOGUE COM SEUS AMIGOS</div><h3>Criar sala</h3><p>Crie uma sala e compartilhe o código com seus amigos.</p><button id="createBtn" class="btn btn-primary">Criar sala <span>→</span></button></article>
+            <article class="action-card join-card"><div class="action-icon">⇥</div><div class="action-kicker">JÁ TEM UM CÓDIGO?</div><h3>Entrar em sala</h3><p>Digite o código da sala para entrar na partida.</p><label for="roomCode">CÓDIGO DA SALA</label><input id="roomCode" class="code-input" maxlength="6" placeholder="EX: A4B92C"><button id="joinBtn" class="btn btn-secondary">Entrar na sala <span>→</span></button></article>
+          </div>
         </div>
       </section>
       <div class="categories"><span>7 CAMPOS DO CONHECIMENTO</span><div class="cat-history"><i>⌛</i> História</div><div class="cat-geo"><i>⌖</i> Geografia</div><div class="cat-science"><i>⚛</i> Ciências</div><div class="cat-math"><i>∑</i> Matemática</div><div class="cat-language"><i>¶</i> Português</div><div class="cat-culture"><i>✦</i> Cultura geral</div><div class="cat-tech"><i>⌘</i> Tecnologia</div></div>
