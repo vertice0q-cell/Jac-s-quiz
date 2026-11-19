@@ -9,6 +9,7 @@ renderProfile();
 $('playerName').addEventListener('input',()=>{playerProfile.name=$('playerName').value.slice(0,18);localStorage.setItem('quizArenaProfile',JSON.stringify(playerProfile));});
 $('avatarPicker').addEventListener('click',e=>{const b=e.target.closest('.avatar-choice');if(!b)return;playerProfile.avatar=b.dataset.avatar;localStorage.setItem('quizArenaProfile',JSON.stringify(playerProfile));renderProfile();});
 function profilePayload(){saveProfile();if(!playerProfile.name){$('playerName').focus();toast('Escolha um apelido antes de continuar.');return null;}return {name:playerProfile.name,avatar:playerProfile.avatar};}
+function setQuickSearching(active){$('quickStatus').classList.toggle('hidden',!active);$('cancelQuickBtn').classList.toggle('hidden',!active);$('quickBtn').disabled=active;$('quickBtn').classList.toggle('searching',active);if(active)$('quickStatus').textContent='Procurando outro jogador online...';}
 const screens=['home','lobby','game','results']; function showScreen(id){screens.forEach(s=>$(s).classList.toggle('active',s===id));}
 function toast(message){const el=$('toast');el.textContent=message;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2600);}
 function escapeHtml(str){return String(str).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
@@ -22,6 +23,11 @@ function updateScoreboard(room){const sorted=[...room.players].sort((a,b)=>b.sco
 function startClock(endsAt,duration=20){clearInterval(timerInterval);activeEndsAt=endsAt;activeDurationMs=duration*1000;const box=$('timer').closest('.timer-box');const tick=()=>{const remaining=Math.max(0,endsAt-Date.now());const left=Math.ceil(remaining/1000);$('timer').textContent=left;$('timerFill').style.width=`${remaining/activeDurationMs*100}%`;box.classList.toggle('urgent',left<=5);};tick();timerInterval=setInterval(tick,100);}
 function answer(index){if(answered)return;answered=true;selectedIndex=index;document.querySelectorAll('.answer').forEach((b,i)=>{b.disabled=true;if(i===index)b.classList.add('selected');});$('feedback').textContent='Resposta enviada! Aguarde os outros jogadores.';socket.emit('game:answer',{index},res=>{if(res?.error){toast(res.error);return;}if(res.correct){$('feedback').textContent=`⚡ Mandou bem! +${res.points} pontos`;$('feedback').className='feedback feedback-correct';}else{$('feedback').textContent='Resposta registrada! Segure a torcida até a revelação.';$('feedback').className='feedback feedback-wait';}});}
 $('createBtn').onclick=()=>{const profile=profilePayload();if(!profile)return;socket.emit('room:create',profile,res=>{if(res?.error)return toast(res.error);currentRoom=res.room;enterLobby(res.room);});};
+$('quickBtn').onclick=()=>{const profile=profilePayload();if(!profile)return;setQuickSearching(true);socket.emit('match:find',profile,res=>{if(res?.error){setQuickSearching(false);toast(res.error);return;}if(res?.waiting)toast('Buscando um adversário...');});};
+$('cancelQuickBtn').onclick=()=>{socket.emit('match:cancel');setQuickSearching(false);toast('Busca cancelada.');};
+socket.on('match:found',room=>{setQuickSearching(false);currentRoom=room;toast('Adversário encontrado! Boa partida!');});
+socket.on('match:cancelled',()=>setQuickSearching(false));
+socket.on('match:waiting',()=>setQuickSearching(true));
 $('joinBtn').onclick=()=>{const profile=profilePayload();if(!profile)return;socket.emit('room:join',{...profile,code:$('roomCode').value.replace(/[^a-z0-9]/gi,'').toUpperCase()},res=>{if(res?.error)return toast(res.error);currentRoom=res.room;enterLobby(res.room);});};
 $('roomCode').addEventListener('input',()=>{$('roomCode').value=$('roomCode').value.replace(/[^a-z0-9]/gi,'').toUpperCase().slice(0,6);});
 $('playerName').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();$('createBtn').click();}});$('roomCode').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();$('joinBtn').click();}});
