@@ -4,7 +4,7 @@ const { Server } = require('socket.io');
 const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
-const questions = require('./questions').map((q, i) => ({ ...q, id: q.id || `q${i+1}` }));
+const questions = require('./easy-questions').map((q, i) => ({ ...q, id: q.id || `easy${i+1}` }));
 const app = express(); const server = http.createServer(app); const io = new Server(server);
 const PORT = process.env.PORT || 3000;
 app.use(express.static(path.join(__dirname, 'public')));
@@ -46,6 +46,12 @@ function finishGame(room) {
   stopTimer(room); room.status='finished';
   const leaderboard=[...room.players.values()].sort((a,b)=>b.score-a.score||b.correct-a.correct).map((p,i)=>({id:p.id,name:p.name,score:p.score,correct:p.correct,wrong:p.wrong,unanswered:p.unanswered,place:i+1}));
   io.to(room.code).emit('game:finished',{leaderboard,totalQuestions:room.questionCount}); emitRoom(room);
+  room.timer=setTimeout(()=>{
+    if(!rooms.has(room.code)||room.status!=='finished') return;
+    room.status='lobby'; room.questionIndex=0; room.questions=[]; room.questionStartedAt=null; room.timer=null;
+    room.players.forEach(p=>{p.answered=false;p.lastAnswer=null;});
+    io.to(room.code).emit('room:return-lobby',publicRoom(room)); emitRoom(room);
+  },8000);
 }
 function validSettings(data) { const n=Number(data?.questionCount); const t=Number(data?.durationSeconds); return { questionCount:Number.isInteger(n)?Math.max(10,Math.min(50,n)):20, durationSeconds:[15,20,25].includes(t)?t:20 }; }
 io.on('connection',socket=>{
@@ -60,6 +66,14 @@ io.on('connection',socket=>{
     if(!name)return cb?.({error:'Digite um nome.'}); if(!room)return cb?.({error:'Sala não encontrada. Confira o código.'}); if(room.status!=='lobby')return cb?.({error:'Essa partida já começou.'}); if(room.players.size>=MAX_PLAYERS)return cb?.({error:'A sala está cheia (máximo de 8).'});
     if([...room.players.values()].some(p=>p.name.toLowerCase()===name.toLowerCase()))return cb?.({error:'Esse nome já está sendo usado na sala.'});
     room.players.set(socket.id,{id:socket.id,name,score:0,answered:false,lastAnswer:null,correct:0,wrong:0,unanswered:0}); socket.join(roomCode); socket.data.roomCode=roomCode; cb?.({room:publicRoom(room)}); emitRoom(room);
+  });
+  socket.on('room:leave',(_,cb)=>{
+    const room=rooms.get(socket.data.roomCode);
+    if(!room){socket.data.roomCode=null;socket.leave(socket.data.roomCode);return cb?.({ok:true});}
+    room.players.delete(socket.id); socket.leave(room.code); socket.data.roomCode=null;
+    if(!room.players.size){stopTimer(room);rooms.delete(room.code);return cb?.({ok:true});}
+    if(room.hostId===socket.id) room.hostId=room.players.keys().next().value;
+    emitRoom(room); cb?.({ok:true});
   });
   socket.on('room:settings',(data,cb)=>{const room=rooms.get(socket.data.roomCode); if(!room)return cb?.({error:'Sala não encontrada.'}); if(socket.id!==room.hostId)return cb?.({error:'Somente o anfitrião pode alterar as configurações.'}); if(room.status!=='lobby')return cb?.({error:'A partida já começou.'}); const s=validSettings(data); room.questionCount=s.questionCount; room.durationSeconds=s.durationSeconds; emitRoom(room); cb?.({ok:true});});
   socket.on('game:start',(_,cb)=>{const room=rooms.get(socket.data.roomCode); if(!room)return cb?.({error:'Sala não encontrada.'}); if(socket.id!==room.hostId)return cb?.({error:'Somente o anfitrião pode iniciar.'}); if(room.status!=='lobby')return cb?.({error:'A partida já começou.'}); if(room.players.size<MIN_PLAYERS)return cb?.({error:'São necessários pelo menos 2 jogadores.'});
