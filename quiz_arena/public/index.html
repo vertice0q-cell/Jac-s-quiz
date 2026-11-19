@@ -13,33 +13,22 @@
   <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-  <div class="ambient ambient-a"></div><div class="ambient ambient-b"></div>
+  <div class="ambient ambient-a"></div><div class="ambient ambient-b"></div><div class="knowledge-backdrop" aria-hidden="true"><span class="kb kb-equation">E = mc²<br>√x + y²<br>π × r²</span><span class="kb kb-atom">⚛</span><span class="kb kb-globe">🌐</span><span class="kb kb-landmark">🏛</span><span class="kb kb-flag">🇧🇷 🇯🇵 🇬🇷 🇪🇬</span><span class="kb kb-book">文 A Ω</span><span class="kb kb-circuit">⌘　╱╲　01</span><span class="kb kb-formula">a² + b² = c²</span><span class="kb kb-planet">🪐</span></div>
   <main class="shell">
     <header class="topbar">
       <a class="brand" href="#"><span class="brand-mark" aria-hidden="true">✳</span><span>QUIZ<span class="brand-accent">ARENA</span></span></a>
       <div class="online"><span class="pulse"></span> MULTIPLAYER ONLINE</div>
     </header>
 
-    <section id="home" class="screen active">
-      <div class="hero hero-compact">
-        <div class="eyebrow"><span>✦</span> UM UNIVERSO DE IDEIAS</div>
-        <h1>Explore. Pense. <span class="gradient-text">Conquiste.</span></h1>
-        <p class="hero-copy">Conhecimento, diversão e competição com seus amigos. Escolha seu nome e entre na Arena!</p>
-      </div>
-      <section class="home-entry" aria-label="Entrar no jogo">
-        <div class="home-name">
-          <div class="eyebrow">SEU NOME</div>
-          <label for="playerName">COMO QUER SER CHAMADO?</label>
-          <input id="playerName" maxlength="18" autocomplete="nickname" placeholder="Digite seu nome...">
-        </div>
-        <div class="home-actions">
-          <div class="action-grid">
-            <article class="action-card create-card"><div class="action-icon">✚</div><div class="action-kicker">JOGUE COM SEUS AMIGOS</div><h3>Criar sala</h3><p>Crie uma sala e compartilhe o código com seus amigos.</p><button id="createBtn" class="btn btn-primary">Criar sala <span>→</span></button></article>
-            <article class="action-card join-card"><div class="action-icon">⇥</div><div class="action-kicker">JÁ TEM UM CÓDIGO?</div><h3>Entrar em sala</h3><p>Digite o código da sala para entrar na partida.</p><label for="roomCode">CÓDIGO DA SALA</label><input id="roomCode" class="code-input" maxlength="6" placeholder="EX: A4B92C"><button id="joinBtn" class="btn btn-secondary">Entrar na sala <span>→</span></button></article>
-          </div>
-        </div>
+    <section id="home" class="screen active home-screen">
+      <div class="home-heading"><div class="home-kicker"><span class="kicker-line"></span> DESAFIE SUA MENTE <span class="kicker-line"></span></div><h1 class="game-wordmark">QUIZ <span>ARENA</span><i>✳</i></h1><p class="home-subtitle">Conhecimento em jogo. <b>Você está pronto para o desafio?</b></p></div>
+      <section class="home-entry" aria-label="Entrar no Quiz Arena">
+        <div class="home-name"><div class="entry-number">01</div><label for="playerName">SEU NOME DE JOGADOR</label><input id="playerName" maxlength="18" autocomplete="nickname" placeholder="Digite seu nome..."><small>É assim que você aparecerá no placar.</small></div>
+        <div class="home-action create-action"><div class="entry-number">02</div><div class="action-symbol">✚</div><div class="action-copy"><span>JOGAR COM AMIGOS</span><h2>Criar sala</h2><p>Abra uma partida e convide sua turma.</p></div><button id="createBtn" class="btn btn-primary">Criar sala <b>→</b></button></div>
+        <div class="home-action join-action"><div class="entry-number">03</div><div class="action-symbol">⇥</div><div class="action-copy"><span>JÁ TEM UM CÓDIGO?</span><h2>Entrar em sala</h2><p>Conecte-se a uma partida existente.</p></div><input id="roomCode" class="code-input" maxlength="6" aria-label="Código da sala" placeholder="CÓDIGO"><button id="joinBtn" class="btn btn-secondary">Entrar <b>→</b></button></div>
       </section>
-      <div class="categories"><span>7 CAMPOS DO CONHECIMENTO</span><div class="cat-history"><i>⌛</i> História</div><div class="cat-geo"><i>⌖</i> Geografia</div><div class="cat-science"><i>⚛</i> Ciências</div><div class="cat-math"><i>∑</i> Matemática</div><div class="cat-language"><i>¶</i> Português</div><div class="cat-culture"><i>✦</i> Cultura geral</div><div class="cat-tech"><i>⌘</i> Tecnologia</div></div>
+      <div class="category-rail"><div class="category-rail-title">UM UNIVERSO DE CONHECIMENTO</div><div class="category-rail-items"><span class="rail-history"><i>🏛</i> História</span><span class="rail-geo"><i>🌍</i> Geografia</span><span class="rail-science"><i>⚛</i> Ciências</span><span class="rail-math"><i>∑</i> Matemática</span><span class="rail-language"><i>✒</i> Português</span><span class="rail-culture"><i>🎭</i> Cultura geral</span><span class="rail-tech"><i>⌘</i> Tecnologia</span></div></div>
+      <div class="home-footnote"><span>✦</span> 7 CATEGORIAS <b>•</b> PARTIDAS MULTIPLAYER <b>•</b> DIVERSÃO E APRENDIZADO <span>✦</span></div>
     </section>
 
     <section id="lobby" class="screen">
