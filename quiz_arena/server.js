@@ -46,7 +46,7 @@ function revealAnswer(room,timedOut=false) {
 }
 function finishGame(room) {
   stopTimer(room); room.status='finished';
-  const leaderboard=[...room.players.values()].sort((a,b)=>b.score-a.score||b.correct-a.correct).map((p,i)=>({id:p.id,name:p.name,score:p.score,correct:p.correct,wrong:p.wrong,unanswered:p.unanswered,place:i+1}));
+  const leaderboard=[...room.players.values()].sort((a,b)=>b.score-a.score||b.correct-a.correct).map((p,i)=>({id:p.id,name:p.name,avatar:p.avatar,score:p.score,correct:p.correct,wrong:p.wrong,unanswered:p.unanswered,place:i+1}));
   io.to(room.code).emit('game:finished',{leaderboard,totalQuestions:room.questionCount}); emitRoom(room);
   room.timer=setTimeout(()=>{
     if(!rooms.has(room.code)||room.status!=='finished') return;
