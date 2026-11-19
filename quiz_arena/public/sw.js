@@ -1,4 +1,4 @@
-const CACHE_NAME = "quiz-arena-shell-v3";
+const CACHE_NAME = "quiz-arena-shell-v4";
 const APP_SHELL = ["/", "/style.css", "/client.js", "/icon.svg"];
 
 self.addEventListener("install", (event) => {
