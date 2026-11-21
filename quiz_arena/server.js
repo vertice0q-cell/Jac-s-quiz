@@ -4,7 +4,16 @@ const { Server } = require('socket.io');
 const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
-const questions = require('./easy-questions').map((q, i) => ({ ...q, id: q.id || `easy${i+1}` }));
+const mainQuestions = require('./questions');
+const easyQuestions = require('./easy-questions').map((q, i) => ({ ...q, id: q.id || `easy${i+1}` }));
+// Junta os dois bancos e remove perguntas repetidas pelo enunciado normalizado.
+const seenQuestionTexts = new Set();
+const questions = [...mainQuestions, ...easyQuestions].filter(q => {
+  const key = String(q.text || '').normalize('NFD').replace(/[\\u0300-\\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+  if (!key || seenQuestionTexts.has(key)) return false;
+  seenQuestionTexts.add(key);
+  return Array.isArray(q.options) && q.options.length >= 2 && Number.isInteger(q.answer) && q.answer >= 0 && q.answer < q.options.length;
+});
 const app = express(); const server = http.createServer(app); const io = new Server(server);
 const PORT = process.env.PORT || 3000;
 app.use(express.static(path.join(__dirname, 'public')));
@@ -17,17 +26,47 @@ function saveHistory() { try { fs.writeFileSync(HISTORY_FILE, JSON.stringify(his
 const ALLOWED_AVATARS=new Set(['🦊','🐼','🐸','🦁','🐙','🐯','🐨','🐲','🦉','🐵','🦄','🐧']);
 function validAvatar(value) { return ALLOWED_AVATARS.has(value) ? value : '🦊'; }
 function code() { return crypto.randomBytes(3).toString('hex').toUpperCase(); }
-function shuffle(arr) { const a = [...arr]; for (let i=a.length-1;i>0;i--) { const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function shuffle(arr) { const a = [...arr]; for (let i=a.length-1;i>0;i--) { const j=crypto.randomInt(i+1); [a[i],a[j]]=[a[j],a[i]]; } return a; }
 function publicRoom(room) { return { code:room.code, hostId:room.hostId, status:room.status, players:[...room.players.values()].map(p=>({id:p.id,name:p.name,avatar:p.avatar,score:p.score,answered:p.answered,isHost:p.id===room.hostId,correct:p.correct,wrong:p.wrong,unanswered:p.unanswered})), questionIndex:room.questionIndex, totalQuestions:room.questionCount, questionCount:room.questionCount, durationSeconds:room.durationSeconds }; }
 function emitRoom(room) { io.to(room.code).emit('room:update', publicRoom(room)); }
 function stopTimer(room) { if(room.timer) clearTimeout(room.timer); room.timer=null; }
 function selectQuestions(count) {
   const recent = new Set(history.slice(-HISTORY_LIMIT));
-  let available = questions.filter(q=>!recent.has(q.id));
-  if (available.length < count) { const older = questions.filter(q=>!available.includes(q)); available = available.concat(shuffle(older)); }
-  const selected = shuffle(available).slice(0,count);
-  history.push(...selected.map(q=>q.id)); history=history.slice(-HISTORY_LIMIT); saveHistory();
-  return selected.map(q => { const order = shuffle(q.options.map((_, i) => i)); return { ...q, options: order.map(i => q.options[i]), answer: order.indexOf(q.answer) }; });
+  const fresh = questions.filter(q => !recent.has(q.id));
+  const older = questions.filter(q => recent.has(q.id));
+  const pool = fresh.length >= count ? fresh : [...fresh, ...shuffle(older)];
+
+  // Embaralha dentro de cada categoria e intercala categorias para evitar blocos previsíveis.
+  const buckets = new Map();
+  for (const q of shuffle(pool)) {
+    if (!buckets.has(q.category)) buckets.set(q.category, []);
+    buckets.get(q.category).push(q);
+  }
+  const selected = [];
+  let lastCategory = null;
+  while (selected.length < count) {
+    let categories = shuffle([...buckets.keys()].filter(category => buckets.get(category).length));
+    if (categories.length > 1 && categories[0] === lastCategory) {
+      [categories[0], categories[1]] = [categories[1], categories[0]];
+    }
+    if (!categories.length) break;
+    for (const category of categories) {
+      if (selected.length >= count) break;
+      const q = buckets.get(category).pop();
+      selected.push(q);
+      lastCategory = category;
+    }
+  }
+
+  history.push(...selected.map(q => q.id));
+  history = history.slice(-HISTORY_LIMIT);
+  saveHistory();
+
+  // Também muda a posição das alternativas em toda partida, mantendo a resposta correta.
+  return selected.map(q => {
+    const order = shuffle(q.options.map((_, i) => i));
+    return { ...q, options: order.map(i => q.options[i]), answer: order.indexOf(q.answer) };
+  });
 }
 function sendQuestion(room) {
   stopTimer(room);
